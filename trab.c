@@ -17,6 +17,15 @@ void leMatriz(float mat[MAXSIZE][MAXSIZE], int size)
     }
 }
 
+void leVetor(float vet[MAXSIZE], int size)
+{
+	int i;
+	
+    for(i = 0; i != size; i++){
+        scanf("%f", &vet[i]);
+    }
+}
+
 void imprimeMatriz(float mat[MAXSIZE][MAXSIZE], int size)
 {
     int i, j;
@@ -30,6 +39,18 @@ void imprimeMatriz(float mat[MAXSIZE][MAXSIZE], int size)
         printf(" ]\n");
     }
     printf("\n");
+}
+
+void imprimeVetor(float vet[MAXSIZE], int size)
+{
+    int i;
+	
+    printf("s: %d\n", size);
+    printf("[");
+    for(i = 0; i != size; i++){
+        printf(" %5.2f", vet[i]);   
+    }
+    printf(" ]\n");
 }
 
 float determinante(float mat[MAXSIZE][MAXSIZE], int size)
@@ -87,7 +108,24 @@ void rotinaDeterminante()
 
 void rotinaSistemaTriangularInferior()
 {
-	
+	system("cls");
+    int size;
+    float mat[MAXSIZE][MAXSIZE];
+
+    printf("insira a ordem da matriz: ");
+    scanf("%d", &size);
+    
+    printf("insira a matriz: \n");
+    leMatriz(mat, size);
+    printf("\n");
+
+    printf("insira o vetor de coeficientes: \n");
+    leMatriz(mat, size);
+    printf("\n");
+
+    
+    printf("pressione qualquer tecla para continuar...\n");
+    getch();
 }
 
 void rotinaSistemaTriangularSuperior() 
