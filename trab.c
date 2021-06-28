@@ -132,8 +132,9 @@ void rotinaMatrizInversa()
 
 // = main e funcoes gerais = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 
-void opcao() {
-	int op;
+int main()
+{
+    int op;
     do{
         system("cls");
 
@@ -154,7 +155,7 @@ void opcao() {
         printf("\nOpcao: ");
         scanf("%d", &op);
 
-    switch(op){
+        switch(op){
         case 1:
             rotinaDeterminante();
             break;
@@ -198,11 +199,5 @@ void opcao() {
         	break;
         }
     }while(op != 11);
-    
-}	
-
-int main()
-{
-	opcao();
 	return 0;
 }
