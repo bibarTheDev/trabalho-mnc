@@ -67,7 +67,7 @@ float determinante(float mat[MAXSIZE][MAXSIZE], int size)
 
 // = funcoes de rotinas = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 
-void rotinaDeterminante()
+void rotinaDeterminante() 
 {
     system("cls");
     int size;
@@ -85,21 +85,55 @@ void rotinaDeterminante()
     getch();
 }
 
-// = main e funcoes gerais = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
-
-int lerEmIntervalo(int min, int max)
+void rotinaSistemaTriangularInferior()
 {
-    int r;
-    do{
-        scanf("%d", &r);
-    }while(r < min || r > max);
-    return r;
+	
 }
 
-int main()
+void rotinaSistemaTriangularSuperior() 
 {
-    int c;
+	
+}
 
+void rotinaDecomposicaoLU() 
+{
+	
+}
+
+void rotinaCholesky()
+{
+	
+}
+
+void rotinaGaussCompacto() 
+{
+	
+}
+
+void rotinaGaussJordan() 
+{
+	
+}
+
+void rotinaJacobi() 
+{
+	
+}
+
+void rotinaGaussSeidel() 
+{
+	
+}
+
+void rotinaMatrizInversa() 
+{
+	
+}
+
+// = main e funcoes gerais = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+
+void opcao() {
+	int op;
     do{
         system("cls");
 
@@ -116,54 +150,59 @@ int main()
         printf("08 - \n");
         printf("09 - \n");
         printf("10 - \n");
-        printf("11 - sair\n");
+        printf("11 - Sair\n");
+        printf("\nOpcao: ");
+        scanf("%d", &op);
 
-        c = lerEmIntervalo(1, 11);
-
-        switch(c){
+    switch(op){
         case 1:
             rotinaDeterminante();
             break;
         
         case 2:
-            
+            rotinaSistemaTriangularInferior();
             break;
 
         case 3:
-            
+             rotinaSistemaTriangularSuperior();
             break;
 
         case 4:
-            
+            rotinaDecomposicaoLU();
             break;
 
         case 5:
-            
+            rotinaCholesky();
             break;
 
         case 6:
-            
+            rotinaGaussCompacto();
             break;
 
         case 7:
-            
+            rotinaGaussJordan();
             break;
 
         case 8:
-            
+            rotinaJacobi();
             break;
 
         case 9:
-            
+            rotinaGaussSeidel();
             break;
 
         case 10:
-            
+            rotinaMatrizInversa();
             break;
-
         default:
-            break;
+        	break;
         }
-    }while(c != 11);
-    return 0;
+    }while(op != 11);
+    
+}	
+
+int main()
+{
+	opcao();
+	return 0;
 }
