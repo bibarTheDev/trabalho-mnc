@@ -53,6 +53,20 @@ void imprimeVetor(float vet[MAXSIZE], int size)
     printf(" ]\n");
 }
 
+void imprimeInversa(float mat[MAXSIZE][MAXSIZE], int size) { //Se determinante = 0 então ão inversível
+	int i, j;
+	
+    printf("s: %d\n", size);
+    for(i = size; i >= 0; i--){
+        printf("[");
+        for(j = size; j >= 0; j--){
+            printf(" %5.2f", mat[i][j]);
+        }   
+        printf(" ]\n");
+    }
+    printf("\n");
+}
+
 float determinante(float mat[MAXSIZE][MAXSIZE], int size)
 {   
     // condicao de saida
@@ -165,7 +179,31 @@ void rotinaGaussSeidel()
 
 void rotinaMatrizInversa() 
 {
+	system("cls");
+    int size;
+    float mat[MAXSIZE][MAXSIZE];
+
+    printf("insira a ordem da matriz: ");
+    scanf("%d", &size);
+    
+    printf("insira a matriz: \n");
+    leMatriz(mat, size);
+    printf("\n");
 	
+	determinante(mat, size);
+	printf("Matriz normal: ");
+	imprimeMatriz(mat, size);
+	if(determinante(mat, size) == 0) {
+		printf("Matriz nao inversivel\n");
+	}
+	else {
+	printf("Matriz inversa: ");
+	imprimeInversa(mat, size);
+	}
+	printf("\n");
+	
+	printf("pressione qualquer tecla para continuar...\n");
+    getch();
 }
 
 // = main e funcoes gerais = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
@@ -180,15 +218,15 @@ int main()
         printf("-------------------------\n");
         printf("\n");
         printf("01 - Calcular determinante\n");
-        printf("02 - \n");
-        printf("03 - \n");
-        printf("04 - \n");
-        printf("05 - \n");
-        printf("06 - \n");
-        printf("07 - \n");
-        printf("08 - \n");
-        printf("09 - \n");
-        printf("10 - \n");
+        printf("02 - Calcular sistema triangular superior\n");
+        printf("03 - Calcular sistema triangular inferior\n");
+        printf("04 - Calcular decomposicao LU\n");
+        printf("05 - Calcular rotina Cholesky\n");
+        printf("06 - Calcular rotina Gauss Compacto\n");
+        printf("07 - Calcular rotina Gauss Jordan\n");
+        printf("08 - Calcular rotina Jacobi\n");
+        printf("09 - Calcular rotina Gauss Seidel\n");
+        printf("10 - Calcular matriz inversa\n");
         printf("11 - Sair\n");
         printf("\nOpcao: ");
         scanf("%d", &op);
