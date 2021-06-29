@@ -60,7 +60,7 @@ void imprimeVetor(float vet[MAXSIZE], int size)
 }
 
 void calcularInversa(float mat[MAXSIZE][MAXSIZE], int size, float s[MAXSIZE][MAXSIZE]) {
-
+	int i, j;
 }
 
 int checarTriangularInferior(float mat[MAXSIZE][MAXSIZE], int size)
