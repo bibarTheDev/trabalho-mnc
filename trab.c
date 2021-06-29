@@ -80,6 +80,27 @@ int checarTriangularInferior(float mat[MAXSIZE][MAXSIZE], int size)
     return 1;
 }
 
+int checarTriangularSuperior(float mat[MAXSIZE][MAXSIZE], int size)
+{
+    int i, j;
+
+    // itera sobre a matriz
+    for(i = 0; i != size; i++){
+        for(j = 0; j != size; j++){
+            // se algum elemento acima da diagonal for diferente de zero, retorna falso
+            if(j < i && checarFloatZero(mat[i][j]) == 0){
+                return 0;
+            }
+            // se algum elemento da diagoal eh zero
+            else if(j == i && checarFloatZero(mat[i][j]) == 1){
+                return 0;
+            }
+        }
+    }
+    
+    return 1;
+}
+
 float determinante(float mat[MAXSIZE][MAXSIZE], int size)
 {   
     // condicao de saida
@@ -120,6 +141,19 @@ void triangularInferior(float mat[MAXSIZE][MAXSIZE], int size, float termos[MAXS
     for(i = 0; i != size; i++){
         s[i] = termos[i];
         for(j = 0; j != i; j++){
+            s[i] -= mat[i][j] * s[j];
+        }
+        s[i] /= mat[i][i];
+    }    
+}
+
+void triangularSuperior(float mat[MAXSIZE][MAXSIZE], int size, float termos[MAXSIZE], float s[MAXSIZE])
+{
+    int i, j;
+
+    for(i = (size - 1); i != -1; i--){
+        s[i] = termos[i];
+        for(j = (size - 1); j != i; j--){
             s[i] -= mat[i][j] * s[j];
         }
         s[i] /= mat[i][i];
@@ -182,7 +216,36 @@ void rotinaSistemaTriangularInferior()
 
 void rotinaSistemaTriangularSuperior() 
 {
-	
+	system("cls");
+    int size;
+    float termos[MAXSIZE], s[MAXSIZE];
+    float mat[MAXSIZE][MAXSIZE];
+
+    printf("insira a ordem da matriz: ");
+    scanf("%d", &size);
+    
+    printf("insira a matriz: \n");
+    leMatriz(mat, size);
+    printf("\n");
+
+    if(checarTriangularSuperior(mat, size) != 1){
+        printf("esta matriz nao eh triangular superior\n");
+        printf("pressione qualquer tecla para continuar...\n");
+        getch();
+
+        return;
+    }
+
+    printf("insira o vetor de termos independentes: \n");
+    leVetor(termos, size);
+    printf("\n");
+
+    triangularSuperior(mat, size, termos, s);
+    printf("o vetor solucao da matriz eh: \n");
+    imprimeVetor(s, size);
+
+    printf("pressione qualquer tecla para continuar...\n");
+    getch();
 }
 
 void rotinaDecomposicaoLU() 
@@ -233,7 +296,7 @@ int main()
         printf("\n");
         printf("01 - Calcular determinante\n");
         printf("02 - Calcular sistema triangular inferior\n");
-        printf("03 - \n");
+        printf("03 - Calcular sistema triangular superior\n");
         printf("04 - \n");
         printf("05 - \n");
         printf("06 - \n");
