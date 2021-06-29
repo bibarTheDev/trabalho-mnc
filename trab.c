@@ -4,6 +4,15 @@
 
 #define MAXSIZE 100
 
+float coeficiente[10][10];
+float Dinv[10][10];
+float approx[10][1];
+float R[10][10];
+float matrizRes[10][1];
+float b[10][1];
+float temp[10][1];
+int linha,coluna,size,navigate;
+
 
 // = funcoes de calculo = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 
@@ -164,6 +173,17 @@ void triangularSuperior(float mat[MAXSIZE][MAXSIZE], int size, float termos[MAXS
     }    
 }
 
+void multiply(float matrizA[][10],float matrizB[][1]){
+    int ctr,ictr;
+
+    for(ctr=0;ctr<size;ctr++){
+        matrizRes[ctr][0]=0;
+            for(navigate=0;navigate<size;navigate++)
+                matrizRes[ctr][0]=matrizRes[ctr][0]+matrizA[ctr][navigate]*matrizB[navigate][0];
+    }
+
+}
+
 // = funcoes de rotinas = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 
 void rotinaDeterminante() 
@@ -272,9 +292,63 @@ void rotinaGaussJordan()
 	
 }
 
-void rotinaJacobi() 
+void rotinaJacobi()
 {
-	
+
+    printf("Digite o numero desconhecido (menor que 10)\n");
+    scanf("%d",&size);
+
+    printf("Digite o coeficiente da matriz\n");
+    for(linha=0;linha<size;linha++)
+        for(coluna=0;coluna<size;coluna++)
+            scanf("%f",&coeficiente[linha][coluna]);
+
+    printf("Digite a primeira aproximacao\n");
+    for(linha=0;linha<size;linha++)
+    scanf("%f",&approx[linha][0]);
+    
+    printf("Digite o coeficiente RHS\n");
+    for(linha=0;linha<size;linha++)
+    scanf("%f",&b[linha][0]);
+
+    for(linha=0;linha<size;linha++)
+        for(coluna=0;coluna<size;coluna++){
+            if(linha==coluna)
+            Dinv[linha][coluna]=1/coeficiente[linha][coluna];
+            else
+            Dinv[linha][coluna]=0;
+        }
+
+    for(linha=0;linha<size;linha++)
+        for(coluna=0;coluna<size;coluna++){
+            if(linha==coluna)
+            R[linha][coluna]=0;
+            else
+            if(linha!=coluna)
+            R[linha][coluna]=coeficiente[linha][coluna];
+        }
+
+    int iter;
+    printf("Digite o numero de iteracoes:\n");
+    scanf("%d",&iter);
+
+    int ctr=1;
+    int octr;
+
+    while(ctr<=iter){
+        multiply(R,approx);
+        for(linha=0;linha<size;linha++)
+        temp[linha][0]=b[linha][0]-matrizRes[linha][0];
+        multiply(Dinv,temp);
+        for(octr=0;octr<size;octr++)
+        approx[octr][0]=matrizRes[octr][0];
+        printf("O valor apos a iteracao %d eh\n",ctr);
+        for(linha=0;linha<size;linha++)
+        printf("%.3f\n",approx[linha][0]);
+        ctr++;
+    }
+    getch();
+
 }
 
 void rotinaGaussSeidel() 
