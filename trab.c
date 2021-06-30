@@ -289,7 +289,39 @@ void rotinaGaussCompacto()
 
 void rotinaGaussJordan() 
 {
-	
+    int i, j, k, n, l;
+    float A[MAXSIZE][MAXSIZE], c, x[MAXSIZE];
+
+    printf("\nDigite o tamanho da matriz: ");
+    scanf_s("%d", &n);
+
+    printf("\nDigite os elementos da matriz:\n");
+    for(i=1; i<=n; i++){
+        for(j=1; j<=(n+1); j++){
+            scanf_s("%f", &A[i][j]);
+        }
+    }
+
+    printf("\nDigite o valor do vetor dos termos independentes: ");
+    scanf_s("%d", &l);
+
+    for(j=1; j<=n; j++){
+        for(i=1; i<=n; i++){
+            if(i!=j){
+                c=A[i][j]/A[j][j];
+                for(k=1; k<=n+1; k++){
+                    A[i][k] = A[i][k] - c * A[j][k];
+                }
+            }
+        }
+    }
+
+    printf("\nA solucao eh:\n");
+    for(i=1; i<=n; i++){
+        x[i] = A[i][n+1]/A[i][i];
+        printf("\n x%d=%f\n", i, x[i]);
+    }
+    return(0);
 }
 
 void rotinaJacobi()
