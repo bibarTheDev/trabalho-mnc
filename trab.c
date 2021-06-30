@@ -4,13 +4,13 @@
 
 #define MAXSIZE 100
 
-float coeficiente[10][10];
-float Dinv[10][10];
-float approx[10][1];
-float R[10][10];
-float matrizRes[10][1];
-float b[10][1];
-float temp[10][1];
+float coeficiente[MAXSIZE][MAXSIZE];
+float Dinv[MAXSIZE][MAXSIZE];
+float approx[MAXSIZE][1];
+float R[MAXSIZE][MAXSIZE];
+float matrizRes[MAXSIZE][1];
+float b[MAXSIZE][1];
+float temp[MAXSIZE][1];
 int linha,coluna,size,navigate;
 
 
@@ -173,7 +173,7 @@ void triangularSuperior(float mat[MAXSIZE][MAXSIZE], int size, float termos[MAXS
     }    
 }
 
-void multiply(float matrizA[][10],float matrizB[][1]){
+void multiply(float matrizA[][MAXSIZE],float matrizB[][1]){
     int ctr,ictr;
 
     for(ctr=0;ctr<size;ctr++){
@@ -295,7 +295,7 @@ void rotinaGaussJordan()
 void rotinaJacobi()
 {
 
-    printf("Digite o numero desconhecido (menor que 10)\n");
+    printf("Digite o numero desconhecido\n");
     scanf("%d",&size);
 
     printf("Digite o coeficiente da matriz\n");
