@@ -171,7 +171,23 @@ float determinante(float mat[MAXSIZE][MAXSIZE], int size)
         det += mat[0][i] * determinante(matAux, size - 1) * ((1 + (i + 1)) % 2 == 0 ? 1 : -1);
     }
 
+	// imprimeMatriz(mat, size);
+	// printf("D: %f\n", det);
+
     return det;
+}
+
+int checkPositivaDefinida(float mat[MAXSIZE][MAXSIZE], int size)
+{
+    int c;
+
+    for(c = 1; c != (size + 1); c++){
+        if(determinante(mat, c) == 0){
+            return 0;
+        }
+    }
+
+    return 1;
 }
 
 void triangularInferior(float mat[MAXSIZE][MAXSIZE], int size, float termos[MAXSIZE], float s[MAXSIZE])
@@ -198,6 +214,67 @@ void triangularSuperior(float mat[MAXSIZE][MAXSIZE], int size, float termos[MAXS
         }
         s[i] /= mat[i][i];
     }    
+}
+
+void decomporEmLU(float mat[MAXSIZE][MAXSIZE], int size, float l[MAXSIZE][MAXSIZE], float u[MAXSIZE][MAXSIZE])
+{
+    int i, j, k;
+
+    // [0 0] [0 1] [0 2]
+    // [1 0] [1 1] [1 2]
+    // [2 0] [2 1] [2 2]
+
+
+    // itera por COLUNAS, nao linhas
+    for(j = 0; j != size; j++){
+        for(i = 0; i != size; i++){
+            // acima da diagonal
+            if(i < j){
+                l[i][j] = 0;
+
+                // Uij = Aij - SUM(k=1, i-1, Lik * Ukj)
+                u[i][j] = mat[i][j];
+                for(k = 0; k <= (i - 1); k++){
+                    u[i][j] -= (l[i][k] * u[k][j]);
+                }
+            }
+            // diagonal
+            else if(i == j){
+                l[i][j] = 1;
+
+                // Uij = Aij - SUM(k=1, i-1, Lik * Ukj)
+                u[i][j] = mat[i][j];
+                for(k = 0; k <= (i - 1); k++){
+                    u[i][j] -= (l[i][k] * u[k][j]);
+                }
+                
+            }
+            // abaixo da diagonal
+            else{
+                u[i][j] = 0;
+
+                // Lij = (Aij - SUM(k=1, j-1, Lik * Ukj))/ Ujj
+                l[i][j] = mat[i][j];
+                for(k = 0; k <= (j - 1); k++){
+                    l[i][j] -= (l[i][k] * u[k][j]);
+                }
+                l[i][j] /= u[j][j];
+            }
+        }   
+    }
+}
+
+void decomposicaoLU(float mat[MAXSIZE][MAXSIZE], int size, float termos[MAXSIZE], float s[MAXSIZE])
+{
+    float y[MAXSIZE];
+    float l[MAXSIZE][MAXSIZE], u[MAXSIZE][MAXSIZE];
+
+    // define L e U
+    decomporEmLU(mat, size, l, u);
+    
+    // resolve a equacao
+    triangularInferior(l, size, termos, y);
+    triangularSuperior(u, size, y, s);
 }
 
 void multiply(float matrizA[][MAXSIZE],float matrizB[][1]){
@@ -301,7 +378,36 @@ void rotinaSistemaTriangularSuperior()
 
 void rotinaDecomposicaoLU() 
 {
-	
+	system("cls");
+    int size;
+    float termos[MAXSIZE], s[MAXSIZE];
+    float mat[MAXSIZE][MAXSIZE];
+
+    printf("insira a ordem da matriz: ");
+    scanf("%d", &size);
+    
+    printf("insira a matriz: \n");
+    leMatriz(mat, size);
+    printf("\n");
+
+    if(checkPositivaDefinida(mat, size) != 1){
+        printf("esta matriz nao eh positiva definida (para todo Ak, k = {1, 2, ..., n} | det(Ak) != 0)\n");
+        printf("pressione qualquer tecla para continuar...\n");
+        getch();
+
+        return;
+    }
+
+    printf("insira o vetor de termos independentes: \n");
+    leVetor(termos, size);
+    printf("\n");
+
+    decomposicaoLU(mat, size, termos, s);
+    printf("o vetor solucao da matriz eh: \n");
+    imprimeVetor(s, size);
+
+    printf("pressione qualquer tecla para continuar...\n");
+    getch();
 }
 
 void rotinaCholesky()
