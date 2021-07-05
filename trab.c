@@ -69,7 +69,34 @@ void imprimeVetor(float vet[MAXSIZE], int size)
 }
 
 void calcularInversa(float mat[MAXSIZE][MAXSIZE], int size, float s[MAXSIZE][MAXSIZE]) {
-	int i, j;
+	int i, j, k = 0;
+	float ident[i][j], pivo = 0, p = 0, m = 0;
+	for(i = 0; i != size; i++) {
+		for(j = 0; j != size; j++) {
+			if(i == j) {
+				ident[i][j] = 1;
+			}
+			else {
+				ident[i][j] = 0;
+			}
+		}
+	}
+	for(j = 0; j != size; j++) {
+		pivo = mat[i][j];
+		p = pivo/pivo;
+		for(k = j; k != size; k++) {
+			mat[j][k] = (mat[j][k])/(pivo);
+			ident[j][k] = (ident[j][k])/(pivo);
+		}
+		for(i = 0; i != size; i++) {
+			if(i != j) {
+				m = mat[i][j]/p;
+				for( k = 0; k != size; k++) {
+					mat[i][k] = (mat[i][k]) - (m * ident[j][k]);
+				}
+			}
+		}
+	}
 }
 
 int checarTriangularInferior(float mat[MAXSIZE][MAXSIZE], int size)
@@ -321,7 +348,6 @@ void rotinaGaussJordan()
         x[i] = A[i][n+1]/A[i][i];
         printf("\n x%d=%f\n", i, x[i]);
     }
-    return(0);
 }
 
 void rotinaJacobi()
