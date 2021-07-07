@@ -459,10 +459,10 @@ void rotinaGaussJordan()
 void rotinaJacobi()
 {
 
-    printf("Digite o numero desconhecido\n");
+    printf("Digite o tamanho da matriz\n");
     scanf("%d",&size);
 
-    printf("Digite o coeficiente da matriz\n");
+    printf("Digite os elementos da matriz\n");
     for(linha=0;linha<size;linha++)
         for(coluna=0;coluna<size;coluna++)
             scanf("%f",&coeficiente[linha][coluna]);
@@ -471,7 +471,7 @@ void rotinaJacobi()
     for(linha=0;linha<size;linha++)
     scanf("%f",&approx[linha][0]);
     
-    printf("Digite o coeficiente RHS\n");
+    printf("Digite o coeficiente\n");
     for(linha=0;linha<size;linha++)
     scanf("%f",&b[linha][0]);
 
