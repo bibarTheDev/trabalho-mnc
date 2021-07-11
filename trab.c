@@ -180,6 +180,19 @@ void multiply(float matrizA[][MAXSIZE],float matrizB[][1]){
 
 }
 
+int checkPositivaDefinida(float mat[MAXSIZE][MAXSIZE], int size)
+{
+    int c;
+
+    for(c = 1; c != (size + 1); c++){
+        if(determinante(mat, c) == 0){
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
 void decomporEmLU(float mat[MAXSIZE][MAXSIZE], int size, float l[MAXSIZE][MAXSIZE], float u[MAXSIZE][MAXSIZE])
 {
     int i, j, k;
@@ -223,6 +236,43 @@ void decomporEmLU(float mat[MAXSIZE][MAXSIZE], int size, float l[MAXSIZE][MAXSIZ
     }
 }
 
+void decomporEmLUCompacto(float mat[MAXSIZE][MAXSIZE], int size, float lu[MAXSIZE][MAXSIZE])
+{
+    int i, j, k;
+
+    // itera por COLUNAS, nao linhas
+    for(j = 0; j != (size + 1); j++){
+        for(i = 0; i != size; i++){
+            // acima da diagonal
+            if(i < j){
+                // Uij = Aij - SUM(k=1, i-1, Lik * Ukj)
+                lu[i][j] = mat[i][j];
+                for(k = 0; k <= (i - 1); k++){
+                    lu[i][j] -= (lu[i][k] * lu[k][j]);
+                }
+            }
+            // diagonal
+            else if(i == j){
+                // Uij = Aij - SUM(k=1, i-1, Lik * Ukj)
+                lu[i][j] = mat[i][j];
+                for(k = 0; k <= (i - 1); k++){
+                    lu[i][j] -= (lu[i][k] * lu[k][j]);
+                }
+
+            }
+            // abaixo da diagonal
+            else{
+                // Lij = (Aij - SUM(k=1, j-1, Lik * Ukj))/ Ujj
+                lu[i][j] = mat[i][j];
+                for(k = 0; k <= (j - 1); k++){
+                    lu[i][j] -= (lu[i][k] * lu[k][j]);
+                }
+                lu[i][j] /= lu[j][j];
+            }
+        }   
+    }
+}
+
 void decomposicaoLU(float mat[MAXSIZE][MAXSIZE], int size, float termos[MAXSIZE], float s[MAXSIZE])
 {
     float y[MAXSIZE];
@@ -234,6 +284,24 @@ void decomposicaoLU(float mat[MAXSIZE][MAXSIZE], int size, float termos[MAXSIZE]
     // resolve a equacao
     triangularInferior(l, size, termos, y);
     triangularSuperior(u, size, y, s);
+}
+
+void decomposicaoGaussCompacto(float mat[MAXSIZE][MAXSIZE], int size, float s[MAXSIZE])
+{
+	int i;
+    float y[MAXSIZE];
+    float lu[MAXSIZE][MAXSIZE];
+
+    // define LU
+    decomporEmLUCompacto(mat, size, lu);
+
+    // extrai a ultima coluna pra nao reescrever uma funcao inteira de triangular superior
+    for(i = 0; i < size; i++){
+        y[i] = lu[i][size];
+    }   
+
+    // resolve a equacao
+    triangularSuperior(lu, size, y, s);
 }
 
 // = funcoes de rotinas = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
@@ -399,7 +467,7 @@ void rotinaCholesky()
 void rotinaGaussCompacto() 
 {
 	system("cls");
-    int size;
+    int i, size;
     float termos[MAXSIZE], s[MAXSIZE];
     float mat[MAXSIZE][MAXSIZE];
 
@@ -422,7 +490,11 @@ void rotinaGaussCompacto()
     leVetor(termos, size);
     printf("\n");
 
-    decomposicaoLU(mat, size, termos, s);
+    for(i = 0; i < size; i++){
+        mat[i][size] = termos[i];
+    }
+
+    decomposicaoGaussCompacto(mat, size, s);
     printf("o vetor solucao da matriz eh: \n");
     imprimeVetor(s, size);
 
