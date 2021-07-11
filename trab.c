@@ -361,7 +361,7 @@ void rotinaDecomposicaoLU()
 void rotinaCholesky()
 {
 	system("cls");
-	int i, j, size;    
+	int i, j, size, k = 0;    
 	printf("\nDigite o tamanho da matriz: \n");     
 	scanf("%d",&size);     
 	float mat[MAXSIZE][MAXSIZE], A[MAXSIZE][MAXSIZE];   
@@ -378,9 +378,20 @@ void rotinaCholesky()
 	 for (i = 0; i != size; i++){      
 	 	for (j = 0; j != size; j++){                         
 	  		scanf("%f",&mat[i][j]);        
-	   	}     
+	   	}   
 	}
-	
+	A[0][0] = sqrt(mat[0][0]);
+	for(i = 0; i != size; i++) {
+		A[i][0] = (mat[i][0])/(A[0][0]); 
+		}
+	for(i = 0; i != size; i++) {
+		A[i][i] = (mat[i][i] - A[i][k] * A[i][k]);
+	}
+	for (i = 0; i != size; i++) {
+		for(j = 0; j != size; j++) {
+			A[i][j] = (mat[i][j] - A[i][k] * A[j][k])/(A[j][j]);
+		}
+	}
 	printf("pressione qualquer tecla para continuar...\n");
 	getch();	
 }
