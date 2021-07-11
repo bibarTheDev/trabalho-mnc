@@ -68,10 +68,6 @@ void imprimeVetor(float vet[MAXSIZE], int size)
     printf(" ]\n");
 }
 
-void calcularInversa(float mat[MAXSIZE][MAXSIZE], int size, float s[MAXSIZE][MAXSIZE]) {
-	
-}
-
 int checarTriangularInferior(float mat[MAXSIZE][MAXSIZE], int size)
 {
     int i, j;
@@ -279,7 +275,29 @@ void rotinaDecomposicaoLU()
 
 void rotinaCholesky()
 {
+	system("cls");
+	int i, j, size;    
+	printf("\nDigite o tamanho da matriz: \n");     
+	scanf("%d",&size);     
+	float mat[MAXSIZE][MAXSIZE], A[MAXSIZE][MAXSIZE];   
+    for(i = 0; i != size; i++)     
+	{         
+		for(j = 0; j != size; j++) {             
+		    if(i == j)    
+				A[i][j] = 1;            
+			else              
+				A[i][j] = 0;
+		}   
+	}             
+	printf("\nDigite os valores da matriz: ");
+	 for (i = 0; i != size; i++){      
+	 	for (j = 0; j != size; j++){                         
+	  		scanf("%f",&mat[i][j]);        
+	   	}     
+	}
 	
+	printf("pressione qualquer tecla para continuar...\n");
+	getch();	
 }
 
 void rotinaGaussCompacto() 
@@ -397,11 +415,11 @@ void rotinaMatrizInversa() {
     for(i = 0; i != size; i++)     
 	{         
 		for(j = 0; j != size; j++) {             
-		   if(i == j){    
+		    if(i == j){    
 			    ident[i][j] = 1;            
 				}
 			else              
-			  ident[i][j] = 0;
+				ident[i][j] = 0;
 		}   
 	}             
 	printf("\nDigite os valores da matriz: ");
@@ -411,7 +429,7 @@ void rotinaMatrizInversa() {
 	   		}     
 	   }
 	   if(determinante(mat, size) == 0) {
-			printf("Inversa impossivel!\n");
+			printf("\nDeterminante = 0, Inversa impossivel\n\n");
 		}
 		else {
 		for(j = 0; j != size; j++){       
@@ -419,17 +437,17 @@ void rotinaMatrizInversa() {
 			for(k = j; k != size; k++) {      
 				mat[j][k] = (mat[j][k])/(pivo);  
 				ident[j][k] = (ident[j][k])/(pivo); 
-				}                
-				for(i = 0; i != size; i++){            
-					if(i != j){           
-						m = mat[i][j]/p;
-						for(k = 0; k != size; k++){        
-							mat[i][k] = (mat[i][k]) - (m * mat[j][k]);  
-							ident[i][k] = (ident[i][k]) - (m * ident[j][k]);
-					}        
-				}    
-			} 
-		}
+			}                
+			for(i = 0; i != size; i++){            
+				if(i != j){           
+					m = mat[i][j]/p;
+					for(k = 0; k != size; k++){        
+						mat[i][k] = (mat[i][k]) - (m * mat[j][k]);  
+						ident[i][k] = (ident[i][k]) - (m * ident[j][k]);
+				}        
+			}    
+		} 
+	}
 		printf("\nMatriz Inversa: \n");    
 		for(i = 0; i != size; i++){
 			for (j = 0; j != size; j++){            
@@ -510,8 +528,6 @@ int main()
         case 10:
             rotinaMatrizInversa();
             break;
-        default:
-        	break;
         }
     }while(op != 11);
 	return 0;
