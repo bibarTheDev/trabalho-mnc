@@ -356,19 +356,6 @@ void rotinaSistemaTriangularSuperior()
     getch();
 }
 
-int checkPositivaDefinida(float mat[MAXSIZE][MAXSIZE], int size)
-{
-    int c;
-
-    for(c = 1; c != (size + 1); c++){
-        if(determinante(mat, c) == 0){
-            return 0;
-        }
-    }
-
-    return 1;
-}
-
 void rotinaDecomposicaoLU() 
 {
 	system("cls");
@@ -410,7 +397,36 @@ void rotinaCholesky()
 
 void rotinaGaussCompacto() 
 {
-	
+	system("cls");
+    int size;
+    float termos[MAXSIZE], s[MAXSIZE];
+    float mat[MAXSIZE][MAXSIZE];
+
+    printf("insira a ordem da matriz: ");
+    scanf("%d", &size);
+
+    printf("insira a matriz: \n");
+    leMatriz(mat, size);
+    printf("\n");
+
+    if(checkPositivaDefinida(mat, size) != 1){
+        printf("esta matriz nao eh positiva definida (para todo Ak, k = {1, 2, ..., n} | det(Ak) != 0)\n");
+        printf("pressione qualquer tecla para continuar...\n");
+        getch();
+
+        return;
+    }
+
+    printf("insira o vetor de termos independentes: \n");
+    leVetor(termos, size);
+    printf("\n");
+
+    decomposicaoLU(mat, size, termos, s);
+    printf("o vetor solucao da matriz eh: \n");
+    imprimeVetor(s, size);
+
+    printf("pressione qualquer tecla para continuar...\n");
+    getch();
 }
 
 void rotinaGaussJordan() 
