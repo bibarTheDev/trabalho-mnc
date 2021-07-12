@@ -1,3 +1,12 @@
+/*
+ 
+Felipe Correa RA:
+Lucca Bibar RA:
+Lucas Bertoni RA:
+Victor Bueno RA:
+
+*/
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
@@ -548,37 +557,60 @@ void rotinaDecomposicaoLU()
 void rotinaCholesky()
 {
 	system("cls");
-	int i, j, size, k = 0;    
+	int i, j, size, k = 0, sim = 1;    
 	printf("\nDigite o tamanho da matriz: \n");     
-	scanf("%d",&size);     
-	float mat[MAXSIZE][MAXSIZE], A[MAXSIZE][MAXSIZE];   
-    for(i = 0; i != size; i++)     
-	{         
-		for(j = 0; j != size; j++) {             
-		    if(i == j)    
-				A[i][j] = 1;            
-			else              
-				A[i][j] = 0;
-		}   
-	}             
+	scanf("%d", &size);     
+	float mat[MAXSIZE][MAXSIZE], A[MAXSIZE][MAXSIZE], vet[MAXSIZE] ;             
 	printf("\nDigite os valores da matriz: ");
 	 for (i = 0; i != size; i++){      
 	 	for (j = 0; j != size; j++){                         
-	  		scanf("%f",&mat[i][j]);        
+	  		scanf("%f", &mat[i][j]);        
 	   	}   
 	}
-	A[0][0] = sqrt(mat[0][0]);
-	for(i = 0; i != size; i++) {
-		A[i][0] = (mat[i][0])/(A[0][0]); 
-		}
-	for(i = 0; i != size; i++) {
-		A[i][i] = (mat[i][i] - A[i][k] * A[i][k]);
+	for(sim = 1; sim != size; sim++) {
+	if(mat[0][sim] != mat[sim][0]) {
+		printf("Matriz nao simetrica!\n");
 	}
-	for (i = 0; i != size; i++) {
-		for(j = 0; j != size; j++) {
-			A[i][j] = (mat[i][j] - A[i][k] * A[j][k])/(A[j][j]);
+	else {
+		A[0][0] = sqrt(mat[0][0]);
+		for(i = 1; i != size; i++) {
+			A[i][0] = (mat[i][0])/(A[0][0]); 
+			}
+		for(i = 1, k =0; i != size; i++) {
+			A[i][i] = sqrt(mat[i][i] - A[i][k] * A[i][k]);
 		}
-	}
+		for (j = 1; j != size; j++) {
+			for(i = 0; i != size; i++) {
+				A[i][j] = (mat[i][j] - A[i][k] * A[j][k])/(A[j][j]);
+			}
+		}
+		for (i = 2; i != size; i++) {
+			for(j = 1; j != size; j++) {
+				A[i][j] = (mat[i][j] - A[i][k] * A[j][k])/(A[j][j]);
+			}
+		}
+		printf("\nMatriz G: \n");    
+			for(i = 0; i != size; i++){
+				for (j = 0; j != size; j++){            
+					printf ("%.2f", A[i][j]);
+					if(j != size - 1) 
+					printf("\t");      
+					else 
+					printf("\n");         
+				}    
+			}
+		printf("\nMatriz G transposta: \n");
+		for(i = 0; i != size; i++){
+				for (j = 0; j != size; j++){            
+					printf ("%.2f", A[j][i]);
+					if(j != size - 1) 
+					printf("\t");      
+					else 
+					printf("\n");         
+					}    
+				}
+			} 
+		}
 	printf("pressione qualquer tecla para continuar...\n");
 	getch();	
 }
