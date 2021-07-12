@@ -45,7 +45,6 @@ void imprimeMatriz(float mat[MAXSIZE][MAXSIZE], int size)
 {
     int i, j;
 	
-    printf("s: %d\n", size);
     for(i = 0; i != size; i++){
         printf("[");
         for(j = 0; j != size; j++){
@@ -60,7 +59,6 @@ void imprimeVetor(float vet[MAXSIZE], int size)
 {
     int i;
 	
-    printf("s: %d\n", size);
     printf("[");
     for(i = 0; i != size; i++){
         printf(" %5.2f", vet[i]);   
@@ -72,7 +70,6 @@ void imprimeVetorPrecisao(float vet[MAXSIZE], int size)
 {
     int i;
 	
-    printf("s: %d\n", size);
     printf("[");
     for(i = 0; i != size; i++){
         printf(" %5.4f", vet[i]);   
