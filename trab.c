@@ -18,7 +18,7 @@ int linha,coluna,size,navigate;
 
 int checarFloatZero(float f)
 {
-    return (abs(f) < 0.00001) ? 1 : 0;
+    return (fabs(f) < 0.00001) ? 1 : 0;
 }
 
 void leMatriz(float mat[MAXSIZE][MAXSIZE], int size)
@@ -66,6 +66,32 @@ void imprimeVetor(float vet[MAXSIZE], int size)
         printf(" %5.2f", vet[i]);   
     }
     printf(" ]\n");
+}
+
+void imprimeVetorPrecisao(float vet[MAXSIZE], int size)
+{
+    int i;
+	
+    printf("s: %d\n", size);
+    printf("[");
+    for(i = 0; i != size; i++){
+        printf(" %5.4f", vet[i]);   
+    }
+    printf(" ]\n");
+}
+
+int checkDiagNaoNula(float mat[MAXSIZE][MAXSIZE], int size)
+{
+    int i;
+
+    // itera sobre a matriz
+    for(i = 0; i != size; i++){
+        if(checarFloatZero(mat[i][i]) == 1){
+            return 0;
+        }
+    }
+
+    return 1;
 }
 
 int checarTriangularInferior(float mat[MAXSIZE][MAXSIZE], int size)
@@ -304,6 +330,102 @@ void decomposicaoGaussCompacto(float mat[MAXSIZE][MAXSIZE], int size, float s[MA
     triangularSuperior(lu, size, y, s);
 }
 
+int convergenciaCriterioLinhas(float mat[MAXSIZE][MAXSIZE], int size)
+{
+    int i, j;
+    float lin, beta = -999999999;
+
+    // max (0 -> size)
+    for (i = 0; i < size; i++){
+        lin = 0;
+        // sum(j -> size)
+        for (j = 0; j < size; j++){
+            if(i == j){
+                continue;
+            }
+
+            lin += fabs(mat[i][j] / mat[i][i]);
+        }
+
+        // se estourou 1, retorna falso
+        beta = (beta > lin) ? beta : lin;
+        if(beta >= 1){
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+int convergenciaCriterioSassenfeld(float mat[MAXSIZE][MAXSIZE], int size)
+{
+    int i, j;
+    float lin, max = -999999999;
+    float beta[MAXSIZE];
+
+    // max (0 -> size)
+    for (i = 0; i < size; i++){
+        lin = 0;
+        // sum(j -> i - 1)
+        for(j = 0; j < i; j++){   
+            lin += fabs(mat[i][j] / mat[i][i]) * beta[j];
+        }
+        
+        // sum(i + i -> size)
+        for(j = i + 1; j < size; j++){   
+            lin += fabs(mat[i][j] / mat[i][i]);
+        }
+
+        // se estourou 1, retorna falso
+        if(lin >= 1){
+            return 0;
+        }
+
+        beta[i] = lin;
+    }
+
+    return 1;
+}
+
+void aproximacaoGaussSeidel(float mat[MAXSIZE][MAXSIZE], int size, float termos[MAXSIZE], float aprox[MAXSIZE], float aproxAnt[MAXSIZE])
+{
+	int i, j;
+    for (i = 0; i < size; i++){
+        aprox[i] = aproxAnt[i];
+    }
+	
+    for(i = 0; i < size; i++){
+        aprox[i] = termos[i];
+        for(j = 0; j < size; j++){
+            if(i == j){
+                continue;
+            }
+
+            aprox[i] -=  (mat[i][j] * aprox[j]);
+        }
+
+        aprox[i] /= mat[i][i];
+    }
+}
+
+int CPGaussSeidel(float aprox[MAXSIZE], int size, float aproxAnt[MAXSIZE], float epsilon)
+{
+    int i;
+    float n, d, num = -1, den = -1;
+
+    for(i = 0; i < size; i++){
+        n = fabs(aprox[i] - aproxAnt[i]);
+        num = (num > n) ? num : n;
+
+        d = fabs(aprox[i]);
+        den = (den > d) ? den : d;
+    }
+
+    printf("%f / %f = %f\n", num, den, num/den);
+    return ((num / den) < epsilon) ? 1 : 0;
+    
+}
+
 // = funcoes de rotinas = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 
 void rotinaDeterminante() 
@@ -493,6 +615,7 @@ void rotinaGaussCompacto()
 
 void rotinaGaussJordan() 
 {
+	system("cls");
     int i, j, k, n, l;
     float A[MAXSIZE][MAXSIZE], c, x[MAXSIZE];
 
@@ -529,7 +652,7 @@ void rotinaGaussJordan()
 
 void rotinaJacobi()
 {
-
+	system("cls");
     printf("Digite o tamanho da matriz\n");
     scanf("%d",&size);
 
@@ -588,7 +711,88 @@ void rotinaJacobi()
 
 void rotinaGaussSeidel() 
 {
-	
+	system("cls");
+    int i, j, k, maxK, size, prec, cp;
+    float epsilon;
+    float termos[MAXSIZE], aproxAnt[MAXSIZE], aprox[MAXSIZE];
+    float mat[MAXSIZE][MAXSIZE];
+
+	printf("Digite o tamanho da matriz\n");
+    scanf("%d", &size);
+
+    printf("Digite os elementos da matriz\n");
+    leMatriz(mat, size);
+    printf("\n");
+
+    // diag principal != 0
+    if(checkDiagNaoNula(mat, size) != 1){
+        printf("esta matriz tem a diagonal nula\n");
+        printf("pressione qualquer tecla para continuar...\n");
+        getch();
+
+        return;
+    }
+
+    // det != 0
+    if(checarFloatZero(determinante(mat, size)) == 1){
+        printf("esta matriz tem o determinante nulo\n");
+        printf("pressione qualquer tecla para continuar...\n");
+        getch();
+
+        return;
+    }
+
+    // verificar convergencia
+    if(convergenciaCriterioLinhas(mat, size) == 0 && convergenciaCriterioSassenfeld(mat, size) == 0){
+        printf("esta matriz nao tem covergencia garantida\n");
+        printf("pressione qualquer tecla para continuar...\n");
+        getch();
+
+        return;
+    }
+    
+    printf("insira o vetor de termos independentes: \n");
+    leVetor(termos, size);
+    printf("\n");
+
+    printf("Digite a aproximacao inicial\n");
+    leVetor(aproxAnt, size);
+    printf("\n");
+
+    printf("Digite a precisao (numero de casas decimais)\n");
+    do{
+        scanf("%d", &prec);
+    }while(prec <= 0);
+    printf("\n");
+
+    epsilon = 1;
+    for(i = 0; i < prec; i++){
+        epsilon /= 10;
+    }
+    
+    printf("Digite o maximo de iteracoes\n");
+    do{
+        scanf("%d", &maxK);
+    }while(maxK <= 0);
+    printf("\n");
+
+    k = 0;
+    do{
+        aproximacaoGaussSeidel(mat, size, termos, aprox, aproxAnt);
+        if(CPGaussSeidel(aprox, size, aproxAnt, epsilon) == 1){
+            break;
+        }
+        for(i = 0; i < size; i++){
+            aproxAnt[i] =  aprox[i];
+        }
+
+        k++;
+    }while(k < maxK);
+    
+    printf("Apos %d iteracoes:\n", k);
+    imprimeVetorPrecisao(aprox, size);
+    printf("pressione qualquer tecla para continuar...\n");
+    getch();        
 }
 
 
